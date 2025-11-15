@@ -32,11 +32,11 @@ public class ReminderTest extends TestBase{
     @Test
     public void addReminderTimeTest(){
         app.getReminder().tapOnTimeField();
-        app.getReminder().selectTimeOfDay("AM");
-        app.getReminder().selectTime(2,15);
+        app.getReminder().selectTimeOfDay("PM");
+        app.getReminder().selectTime(2,16);
         app.getReminder().tapOnOk();
         app.getReminder().tapSaveReminder();
-        Assert.assertTrue(app.getMainscreen().isReminderDateTimePresent().contains("2:15 AM"));
+        Assert.assertTrue(app.getMainscreen().isReminderDateTimePresent().contains("14:16 PM"));
 
 
     }

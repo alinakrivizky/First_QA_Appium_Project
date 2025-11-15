@@ -1,9 +1,16 @@
 package com.remindly.framework;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.PerformsTouchActions;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.PointerInput;
 
+import org.openqa.selenium.interactions.Sequence;
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 
 public class ReminderHelper extends BaseHelper {
@@ -92,27 +99,41 @@ public class ReminderHelper extends BaseHelper {
     }
 
     public void selectTime(int hour, int minute) {
+
         By hoursButton = By.id("com.blanyal.remindly:id/hours");
-        waitForElement(hoursButton, 10);
-        tap(hoursButton);
-        pause(300);
-        By hourLocator = By.xpath("//android.widget.FrameLayout[@content-desc=\"Hours circular slider: " + hour + "\"]/android.view.View[4]");
-        waitForElement(hourLocator, 10);
-        tap(hourLocator);
-        System.out.println("Selected hour: " + hour);
-        pause(300);
+            driver.findElement(hoursButton).click();
+            pause(500);
+            int left = 168, top = 688, right = 867, bottom = 1513;
+            int centerX = (left + right) / 2;
+            int centerY = (top + bottom) / 2;
+            int radius = Math.min(right - left, bottom - top) / 2;
+            int hourRadius = (int)(radius * 0.85);
+            double hourAngle = Math.toRadians((hour % 12) * 30);
+            int hourX = centerX + (int)(hourRadius * Math.sin(hourAngle));
+            int hourY = centerY - (int)(hourRadius * Math.cos(hourAngle));
 
-        By minutesButton = By.id("com.blanyal.remindly:id/minutes");
-        waitForElement(minutesButton, 10);
-        tap(minutesButton);
-        pause(300);
-        By minuteLocator = By.xpath("//android.widget.FrameLayout[@content-desc=\"Minutes circular slider: " + minute + "\"]/android.view.View[4]");
-        waitForElement(minuteLocator, 10);
-        tap(minuteLocator);
-        System.out.println("Selected minutes: " + minute);
-        pause(300);
+            new TouchAction((PerformsTouchActions) driver)
+                    .tap(PointOption.point(hourX, hourY))
+                    .perform();
+            pause(500);
 
+
+            By minutesButton = By.id("com.blanyal.remindly:id/minutes");
+            driver.findElement(minutesButton).click();
+            pause(500);
+
+            int minuteRadius = (int)(radius * 0.85);
+            double minuteAngle = Math.toRadians(minute * 6-4);
+            int minuteX = centerX + (int)(minuteRadius * Math.sin(minuteAngle));
+            int minuteY = centerY - (int)(minuteRadius * Math.cos(minuteAngle));
+
+            new TouchAction((PerformsTouchActions) driver)
+                    .tap(PointOption.point(minuteX, minuteY))
+                    .perform();
+            pause(500);
+        }
     }
-}
+
+
 
 
